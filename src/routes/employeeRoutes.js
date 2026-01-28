@@ -1,10 +1,8 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
+const employeeController = require('../controllers/employeeController');
 
-
-// Temporary test route 
-router.get("/test", (req, res) => {
-    res.json({message:" Employee Routes Working"});
-});
+// This matches the POST request you just made
+router.post('/register', employeeController.registerEmployee);
 
 module.exports = router;

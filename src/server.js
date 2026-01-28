@@ -1,40 +1,27 @@
-require("dotenv").config();
-const app = require("./app");
-const db = require("./models"); // This imports the sequelize instance from src/models/index.js
+const app = require('./app');
+const sequelize = require('../config/database');
+// Import your models so Sequelize knows about them
+require('./models/employee'); 
 
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 3000;
 
-/**
- * Start Server Function
- * Following BKG Standard: Validate DB connection before listening
- */
-const startServer = async () => {
+async function startServer() {
   try {
-    // Check database connection
-    // We use 'db.authenticate()' because our model index exports the instance directly
-    await db.authenticate();
-    
-    console.log("-----------------------------------------");
-    console.log("✅ Database connection established.");
-    
-    // Debugging (Remove this in production/stable)
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`📡 Connected as: ${process.env.DB_USER}`);
-    }
+    // 1. Test connection
+    await sequelize.authenticate();
+    console.log('✅ Connected to MySQL.');
 
-    // Start listening for requests
+    // 2. Create tables if they don't exist
+    // 'alter: true' will update the table if you add new columns later
+    await sequelize.sync({ alter: true }); 
+    console.log('✅ Database tables synchronized.');
+
     app.listen(PORT, () => {
-      console.log(`🚀 BKG HR Service is live on port: ${PORT}`);
-      console.log(`📂 Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log("-----------------------------------------");
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error("❌ Database connection failed!");
-    console.error(`Reason: ${error.message}`);
-    
-    // Exit process with failure code as per BKG stability requirements
-    process.exit(1);
+    console.error('❌ Database error:', error);
   }
-};
+}
 
 startServer();

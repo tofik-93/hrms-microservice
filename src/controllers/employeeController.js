@@ -1,25 +1,28 @@
-const Employee = require('../models'); // This refers to your sequelize instance
+const Employee = require('../models/employee'); 
+const { v4: uuidv4 } = require('uuid');
 
-const employeeController = {
-  // Get all employees
-  getAll: async (req, res) => {
-    try {
-      const employees = await Employee.models.Employee.findAll();
-      res.status(200).json({ success: true, data: employees });
-    } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
+exports.registerEmployee = async (req, res) => {
+    // Check if req.body exists at all
+    if (!req || !req.body) {
+        return res.status(400).json({
+            status: "error",
+            message: "Request body is empty. Make sure you are sending JSON in Postman."
+        });
     }
-  },
 
-  // Create a new employee
-  create: async (req, res) => {
     try {
-      const newEmployee = await Employee.models.Employee.create(req.body);
-      res.status(201).json({ success: true, data: newEmployee });
+        const { email, first_name, last_name } = req.body;
+
+        const newEmployee = await Employee.create({
+            id: uuidv4(),
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            status: 0 
+        });
+
+        res.status(201).json({ status: "success", data: newEmployee });
     } catch (error) {
-      res.status(400).json({ success: false, message: error.message });
+        res.status(400).json({ status: "error", message: error.message });
     }
-  }
 };
-
-module.exports = employeeController;
