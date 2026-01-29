@@ -7,15 +7,15 @@ const Employee = sequelize.define('Employee', {
     primaryKey: true,
     autoIncrement: true
   },
-  employeeId: { // Matches your screenshot
+  employeeId: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  firstName: { // Matches your screenshot
+  firstName: { 
     type: DataTypes.STRING,
     allowNull: false
   },
-  lastName: { // Matches your screenshot
+  lastName: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -26,7 +26,7 @@ const Employee = sequelize.define('Employee', {
   department: DataTypes.STRING,
   status: DataTypes.STRING
 }, {
-  tableName: 'Employees', // Note the capital 'E' in your screenshot
+  tableName: 'Employees',
   timestamps: true
 });
 
